@@ -982,14 +982,3 @@ class TombolaGame {
         this.playSound('error');
     }
 }
-
-// Inizializza gioco quando la pagina è caricata
-document.addEventListener('DOMContentLoaded', () => {
-    try {
-        window.tombolaGame = new TombolaGame();
-    } catch (error) {
-        console.error('Errore inizializzazione gioco:', error);
-        alert('Errore durante il caricamento del gioco. Ricarica la pagina.');
-        window.location.href = '/';
-    }
-});
