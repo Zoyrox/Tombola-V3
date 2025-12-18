@@ -1,0 +1,63 @@
+services:
+  - type: web
+    name: tombola-online
+    env: node
+    region: frankfurt  # o: ohio, oregon, singapore, sydney
+    plan: free  # free, starter, standard, pro
+    
+    # Build & Deploy
+    buildCommand: |
+      npm install
+      echo "✅ Build completato"
+    
+    startCommand: npm start
+    
+    # Health Check
+    healthCheckPath: /
+    healthCheckTimeout: 30s
+    
+    # Auto Deploy
+    autoDeploy: true
+    branch: main
+    
+    # Environment Variables
+    envVars:
+      - key: NODE_ENV
+        value: production
+      
+      - key: PORT
+        value: 3000
+      
+      - key: SUPER_ADMINS
+        generateValue: false
+        sync: false
+        value: '[{"username":"admin","password":"cambiami123!"}]'  # CAMBIA OBBLIGATORIAMENTE!
+      
+      - key: SESSION_SECRET
+        generateValue: true
+      
+      - key: LOG_LEVEL
+        value: info
+    
+    # Advanced Settings
+    disk:
+      name: data
+      mountPath: /data
+      sizeGB: 1
+    
+    # CORS (opzionale)
+    headers:
+      - path: /*
+        name: Access-Control-Allow-Origin
+        value: "*"
+    
+    # Scaling (per piani superiori)
+    # numInstances: 2
+    # instanceSize: 512MB
+
+# Database (opzionale, per produzione)
+# databases:
+#   - name: tombola-db
+#     databaseName: tombola
+#     plan: free
+#     region: frankfurt
