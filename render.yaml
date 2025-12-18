@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: tombola-online
+    runtime: node
+    buildCommand: "npm install"
+    startCommand: "npm start"
+    envVars:
+      - key: SUPER_ADMIN_PASSWORD
+        value: "tua_password_super_admin"
+      - key: ADMIN_PASSWORD
+        value: "tua_password_admin"
