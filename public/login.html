@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tombola Online - Super Admin</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+    <style>
+        .super-admin-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            padding: 2rem;
+        }
+        
+        .super-admin-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: var(--border-radius-lg);
+            padding: 3rem;
+            width: 100%;
+            max-width: 500px;
+            box-shadow: var(--box-shadow-lg);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            animation: slideUp 0.5s ease;
+        }
+        
+        .super-admin-header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+        
+        .super-admin-logo {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            color: white;
+            font-size: 2rem;
+        }
+        
+        .super-admin-title {
+            color: var(--dark-color);
+            margin-bottom: 0.5rem;
+        }
+        
+        .super-admin-subtitle {
+            color: var(--gray-600);
+            font-size: 0.95rem;
+        }
+        
+        .security-level {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            padding: 0.75rem;
+            background: var(--gray-100);
+            border-radius: var(--border-radius-sm);
+            font-size: 0.875rem;
+        }
+        
+        .security-level.high {
+            color: var(--success-color);
+            background: rgba(74, 222, 128, 0.1);
+        }
+        
+        .back-to-home {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--gray-200);
+        }
+        
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="super-admin-container">
+        <div class="super-admin-card">
+            <!-- Header -->
+            <div class="super-admin-header">
+                <div class="super-admin-logo">
+                    <i class="fas fa-crown"></i>
+                </div>
+                <h1 class="super-admin-title">Super Admin</h1>
+                <p class="super-admin-subtitle">
+                    Area riservata per la gestione completa del sistema Tombola Online
+                </p>
+                <div class="security-level high">
+                    <i class="fas fa-shield-alt"></i>
+                    <span>Accesso ad alto livello di sicurezza</span>
+                </div>
+            </div>
+            
+            <!-- Login Form -->
+            <form id="super-admin-login-form" class="login-form">
+                <div class="form-group">
+                    <label for="super-username">
+                        <i class="fas fa-user"></i> Username Super Admin
+                    </label>
+                    <input type="text" 
+                           id="super-username" 
+                           class="form-control" 
+                           placeholder="superadmin"
+                           required
+                           autocomplete="username">
+                </div>
+                
+                <div class="form-group">
+                    <label for="super-password">
+                        <i class="fas fa-lock"></i> Password
+                    </label>
+                    <input type="password" 
+                           id="super-password" 
+                           class="form-control" 
+                           placeholder="••••••••"
+                           required
+                           autocomplete="current-password">
+                    <small class="form-text">
+                        Configurata nelle variabili d'ambiente del server
+                    </small>
+                </div>
+                
+                <div class="form-group">
+                    <div class="form-check">
+                        <input type="checkbox" 
+                               id="remember-session" 
+                               class="form-check-input">
+                        <label class="form-check-label" for="remember-session">
+                            Mantieni la sessione attiva (24 ore)
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary btn-lg w-100">
+                        <i class="fas fa-sign-in-alt"></i> Accedi come Super Admin
+                    </button>
+                </div>
+            </form>
+            
+            <!-- Admin Creation Section (dopo il login) -->
+            <div id="admin-creation-section" class="d-none">
+                <div class="admin-creation-header">
+                    <h3><i class="fas fa-user-plus"></i> Crea Nuovo Admin</h3>
+                    <p class="text-muted">
+                        Genera un codice admin per permettere a qualcuno di gestire una stanza
+                    </p>
+                </div>
+                
+                <form id="create-admin-form" class="admin-creation-form">
+                    <div class="form-group">
+                        <label for="new-admin-code">
+                            <i class="fas fa-key"></i> Codice Admin
+                        </label>
+                        <div class="input-group">
+                            <input type="text" 
+                                   id="new-admin-code" 
+                                   class="form-control" 
+                                   placeholder="Es: ADMIN123"
+                                   required>
+                            <button type="button" class="btn btn-outline" id="btn-generate-code">
+                                <i class="fas fa-random"></i> Genera
+                            </button>
+                        </div>
+                        <small class="form-text">
+                            Minimo 6 caratteri, lettere e numeri
+                        </small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="max-rooms">
+                            <i class="fas fa-door-closed"></i> Stanze Massime
+                        </label>
+                        <input type="number" 
+                               id="max-rooms" 
+                               class="form-control" 
+                               value="5" 
+                               min="1" 
+                               max="50">
+                        <small class="form-text">
+                            Numero massimo di stanze che questo admin può gestire
+                        </small>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-success w-100">
+                            <i class="fas fa-plus-circle"></i> Crea Codice Admin
+                        </button>
+                    </div>
+                </form>
+                
+                <!-- Lista Admin Creati -->
+                <div class="admin-list-section">
+                    <h4><i class="fas fa-list"></i> Admin Creati</h4>
+                    <div class="admin-list" id="admin-list">
+                        <div class="empty-state">
+                            <i class="fas fa-user-shield"></i>
+                            <p>Nessun admin creato ancora</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Logout Button -->
+                <div class="logout-section">
+                    <button class="btn btn-outline w-100" id="btn-super-logout">
+                        <i class="fas fa-sign-out-alt"></i> Logout Super Admin
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Back to Home -->
+            <div class="back-to-home">
+                <a href="/" class="btn btn-outline">
+                    <i class="fas fa-arrow-left"></i> Torna alla Home
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Notifiche -->
+    <div class="notification-container"></div>
+    
+    <!-- Scripts -->
+    <script src="auth.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const loginForm = document.getElementById('super-admin-login-form');
+            const creationSection = document.getElementById('admin-creation-section');
+            const createAdminForm = document.getElementById('create-admin-form');
+            const adminList = document.getElementById('admin-list');
+            const generateCodeBtn = document.getElementById('btn-generate-code');
+            
+            let superAdminToken = null;
+            let createdAdmins = [];
+            
+            // Carica admin creati da localStorage
+            try {
+                const savedAdmins = localStorage.getItem('tombola_created_admins');
+                if (savedAdmins) {
+                    createdAdmins = JSON.parse(savedAdmins);
+                    updateAdminList();
+                }
+            } catch (e) {
+                console.error('Errore caricamento admin:', e);
+            }
+            
+            // Login Super Admin
+            loginForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                
+                const username = document.getElementById('super-username').value;
+                const password = document.getElementById('super-password').value;
+                
+                const result = await window.authManager.loginSuperAdmin(username, password);
+                
+                if (result.success) {
+                    superAdminToken = result.data.token;
+                    
+                    // Mostra sezione creazione admin
+                    loginForm.classList.add('d-none');
+                    creationSection.classList.remove('d-none');
+                    
+                    showNotification('Accesso Super Admin effettuato con successo!', 'success');
+                } else {
+                    showNotification(result.error, 'error');
+                }
+            });
+            
+            // Genera codice casuale
+            generateCodeBtn.addEventListener('click', () => {
+                const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+                let code = '';
+                for (let i = 0; i < 8; i++) {
+                    code += chars.charAt(Math.floor(Math.random() * chars.length));
+                }
+                document.getElementById('new-admin-code').value = code;
+            });
+            
+            // Crea nuovo admin
+            createAdminForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                
+                const adminCode = document.getElementById('new-admin-code').value.trim();
+                const maxRooms = document.getElementById('max-rooms').value;
+                
+                if (!adminCode || adminCode.length < 6) {
+                    showNotification('Il codice admin deve essere di almeno 6 caratteri', 'warning');
+                    return;
+                }
+                
+                const result = await window.authManager.createAdminCode(
+                    superAdminToken, 
+                    adminCode, 
+                    maxRooms
+                );
+                
+                if (result.success) {
+                    // Salva admin nella lista locale
+                    createdAdmins.push({
+                        code: adminCode,
+                        maxRooms: parseInt(maxRooms),
+                        created: new Date().toISOString(),
+                        used: 0
+                    });
+                    
+                    localStorage.setItem('tombola_created_admins', JSON.stringify(createdAdmins));
+                    
+                    updateAdminList();
+                    
+                    showNotification(result.message, 'success');
+                    
+                    // Reset form
+                    createAdminForm.reset();
+                    document.getElementById('max-rooms').value = 5;
+                } else {
+                    showNotification(result.message, 'error');
+                }
+            });
+            
+            // Logout
+            document.getElementById('btn-super-logout').addEventListener('click', () => {
+                window.authManager.logout();
+                window.location.href = '/';
+            });
+            
+            // Funzioni helper
+            function updateAdminList() {
+                if (createdAdmins.length === 0) {
+                    adminList.innerHTML = `
+                        <div class="empty-state">
+                            <i class="fas fa-user-shield"></i>
+                            <p>Nessun admin creato ancora</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                adminList.innerHTML = createdAdmins.map(admin => `
+                    <div class="admin-list-item">
+                        <div class="admin-code">
+                            <i class="fas fa-key"></i>
+                            <strong>${admin.code}</strong>
+                        </div>
+                        <div class="admin-details">
+                            <span class="admin-stat">
+                                <i class="fas fa-door-closed"></i>
+                                Stanze: ${admin.used}/${admin.maxRooms}
+                            </span>
+                            <span class="admin-date">
+                                <i class="far fa-calendar"></i>
+                                ${new Date(admin.created).toLocaleDateString()}
+                            </span>
+                        </div>
+                        <div class="admin-actions">
+                            <button class="btn btn-sm btn-outline" onclick="copyAdminCode('${admin.code}')">
+                                <i class="fas fa-copy"></i> Copia
+                            </button>
+                            <button class="btn btn-sm btn-danger" onclick="deleteAdminCode('${admin.code}')">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+            
+            window.copyAdminCode = function(code) {
+                navigator.clipboard.writeText(code).then(() => {
+                    showNotification(`Codice "${code}" copiato negli appunti!`, 'success');
+                }).catch(err => {
+                    console.error('Errore copia:', err);
+                });
+            };
+            
+            window.deleteAdminCode = function(code) {
+                if (confirm(`Sei sicuro di voler eliminare il codice admin "${code}"?`)) {
+                    createdAdmins = createdAdmins.filter(admin => admin.code !== code);
+                    localStorage.setItem('tombola_created_admins', JSON.stringify(createdAdmins));
+                    updateAdminList();
+                    showNotification(`Codice admin "${code}" eliminato`, 'warning');
+                }
+            };
+            
+            function showNotification(message, type = 'info') {
+                const container = document.querySelector('.notification-container');
+                if (!container) return;
+                
+                const notification = document.createElement('div');
+                notification.className = `notification ${type}`;
+                notification.innerHTML = `
+                    <div class="notification-icon">
+                        <i class="fas fa-${getIconForType(type)}"></i>
+                    </div>
+                    <div class="notification-content">
+                        <div class="notification-message">${message}</div>
+                    </div>
+                    <button class="notification-close">&times;</button>
+                `;
+                
+                container.appendChild(notification);
+                
+                setTimeout(() => {
+                    notification.classList.add('hiding');
+                    setTimeout(() => notification.remove(), 300);
+                }, 5000);
+                
+                notification.querySelector('.notification-close').addEventListener('click', () => {
+                    notification.classList.add('hiding');
+                    setTimeout(() => notification.remove(), 300);
+                });
+            }
+            
+            function getIconForType(type) {
+                switch (type) {
+                    case 'success': return 'check-circle';
+                    case 'error': return 'exclamation-circle';
+                    case 'warning': return 'exclamation-triangle';
+                    case 'info': return 'info-circle';
+                    default: return 'info-circle';
+                }
+            }
+            
+            // Auto-focus sul campo username
+            document.getElementById('super-username').focus();
+        });
+    </script>
+</body>
+</html>

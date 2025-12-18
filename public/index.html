@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tombola Online - Gioca in Tempo Reale</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+</head>
+<body>
+    <!-- Schermata Principale -->
+    <div id="main-screen" class="screen active">
+        <div class="login-screen">
+            <div class="login-container">
+                <!-- Super Admin Login -->
+                <div class="login-card">
+                    <h2><i class="fas fa-crown"></i> Super Admin</h2>
+                    <p class="login-description">
+                        Area riservata per i gestori del sistema. Da qui puoi creare nuovi admin e monitorare tutte le stanze.
+                    </p>
+                    <form id="super-admin-login-form">
+                        <div class="form-group">
+                            <label for="super-username">Username</label>
+                            <input type="text" id="super-username" class="form-control" placeholder="superadmin" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="super-password">Password</label>
+                            <input type="password" id="super-password" class="form-control" placeholder="••••••••" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-sign-in-alt"></i> Accedi come Super Admin
+                        </button>
+                    </form>
+                </div>
+                
+                <!-- Admin Login -->
+                <div class="login-card">
+                    <h2><i class="fas fa-user-shield"></i> Admin Partita</h2>
+                    <p class="login-description">
+                        Hai un codice admin? Crea una stanza e gestisci la partita. Puoi estrarre numeri e gestire i giocatori.
+                    </p>
+                    <form id="admin-login-form">
+                        <div class="form-group">
+                            <label for="admin-code">Codice Admin</label>
+                            <input type="text" id="admin-code" class="form-control" placeholder="CODICE123" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="room-code">Codice Stanza</label>
+                            <input type="text" id="room-code" class="form-control" placeholder="FAMIGLIA2024" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="room-name">Nome Stanza (opzionale)</label>
+                            <input type="text" id="room-name" class="form-control" placeholder="Tombola di Natale">
+                        </div>
+                        <button type="submit" class="btn btn-secondary">
+                            <i class="fas fa-play-circle"></i> Avvia/Crea Stanza
+                        </button>
+                    </form>
+                </div>
+                
+                <!-- Player Login -->
+                <div class="login-card">
+                    <h2><i class="fas fa-users"></i> Giocatore</h2>
+                    <p class="login-description">
+                        Unisciti a una stanza esistente con il codice fornito dall'admin. Scegli un nome e preparati a giocare!
+                    </p>
+                    <form id="player-login-form">
+                        <div class="form-group">
+                            <label for="player-room-code">Codice Stanza</label>
+                            <input type="text" id="player-room-code" class="form-control" placeholder="Inserisci codice" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="player-name">Il tuo Nome</label>
+                            <input type="text" id="player-name" class="form-control" placeholder="Mario Rossi" required>
+                        </div>
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-gamepad"></i> Unisciti alla Partita
+                        </button>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- Footer -->
+            <div class="text-center mt-3">
+                <p class="text-muted">
+                    <i class="fas fa-info-circle"></i> 
+                    Usa il menu in alto per navigare tra le diverse aree
+                </p>
+                <div class="mt-2">
+                    <button class="btn btn-outline btn-sm" onclick="showHowToPlay()">
+                        <i class="fas fa-question-circle"></i> Come si Gioca
+                    </button>
+                    <button class="btn btn-outline btn-sm" onclick="showCredits()">
+                        <i class="fas fa-heart"></i> Credits
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Schermata Super Admin -->
+    <div id="super-admin-screen" class="screen">
+        <!-- Contenuto caricato dinamicamente -->
+    </div>
+    
+    <!-- Schermata Admin -->
+    <div id="admin-screen" class="screen">
+        <!-- Contenuto caricato dinamicamente -->
+    </div>
+    
+    <!-- Schermata Giocatore -->
+    <div id="player-screen" class="screen">
+        <!-- Contenuto caricato dinamicamente -->
+    </div>
+    
+    <!-- Notifiche -->
+    <div class="notification-container"></div>
+    
+    <!-- Scripts -->
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="auth.js"></script>
+    <script src="game.js"></script>
+    <script src="admin-panel.js"></script>
+    <script>
+        // Navigazione principale
+        document.getElementById('super-admin-login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            await handleSuperAdminLogin();
+        });
+        
+        document.getElementById('admin-login-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const adminCode = document.getElementById('admin-code').value;
+            const roomCode = document.getElementById('room-code').value;
+            window.location.href = `admin.html?code=${adminCode}&room=${roomCode}`;
+        });
+        
+        document.getElementById('player-login-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const roomCode = document.getElementById('player-room-code').value;
+            const playerName = document.getElementById('player-name').value;
+            window.location.href = `game.html?room=${roomCode}&name=${encodeURIComponent(playerName)}`;
+        });
+        
+        async function handleSuperAdminLogin() {
+            const username = document.getElementById('super-username').value;
+            const password = document.getElementById('super-password').value;
+            
+            try {
+                const response = await fetch('/api/auth/super-admin', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    localStorage.setItem('super_admin_token', data.token);
+                    window.location.href = 'admin.html?super=true';
+                } else {
+                    alert('Credenziali non valide');
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                alert('Errore durante il login');
+            }
+        }
+        
+        function showHowToPlay() {
+            alert(`COME GIOCARE A TOMBOLA ONLINE:
+            
+1. SUPER ADMIN: Gestisce il sistema e crea codici admin
+2. ADMIN: Crea stanze con codice admin, estrae numeri, gestisce giocatori
+3. GIOCATORI: Si uniscono con codice stanza, ricevono cartella personalizzata
+            
+FEATURES:
+• Estrazione manuale/automatica (6 secondi)
+• Cartelle uniche per ogni giocatore
+• Popup numeri estratti
+• Chat in tempo reale
+• Gestione giocatori (kick/ban)
+• Statistiche di gioco
+            
+Buon divertimento! 🎯`);
+        }
+        
+        function showCredits() {
+            alert('🎮 Tombola Online\n\nCreato con ❤️ per far divertire famiglie e amici!\n\nTecnologie: Node.js, Socket.io, JavaScript, HTML5, CSS3');
+        }
+    </script>
+</body>
+</html>

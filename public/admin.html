@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tombola Online - Dashboard Admin</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+</head>
+<body>
+    <!-- Schermata Caricamento -->
+    <div id="admin-loading" class="screen active">
+        <div class="loading-container">
+            <div class="loading-spinner">
+                <div class="spinner"></div>
+                <h2>Caricamento Dashboard Admin...</h2>
+                <p>Preparando il pannello di controllo</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Schermata Login Admin -->
+    <div id="admin-login-screen" class="screen">
+        <div class="admin-login-container">
+            <div class="admin-login-card">
+                <div class="login-header">
+                    <div class="login-logo">
+                        <i class="fas fa-user-shield"></i>
+                    </div>
+                    <h1>Admin Dashboard</h1>
+                    <p class="login-subtitle">
+                        Accedi con il tuo codice admin per gestire una stanza tombola
+                    </p>
+                </div>
+
+                <form id="admin-login-form" class="login-form">
+                    <div class="form-group">
+                        <label for="admin-code">
+                            <i class="fas fa-key"></i> Codice Admin
+                        </label>
+                        <input type="text" 
+                               id="admin-code" 
+                               class="form-control" 
+                               placeholder="Inserisci codice admin"
+                               required
+                               autocomplete="off">
+                        <small class="form-text">
+                            Ottenuto dal Super Admin
+                        </small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="room-code">
+                            <i class="fas fa-door-open"></i> Codice Stanza
+                        </label>
+                        <input type="text" 
+                               id="room-code" 
+                               class="form-control" 
+                               placeholder="Es: FAMIGLIA2024"
+                               required
+                               autocomplete="off">
+                        <small class="form-text">
+                            Crea nuovo o unisciti a stanza esistente
+                        </small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="room-name">
+                            <i class="fas fa-signature"></i> Nome Stanza (opzionale)
+                        </label>
+                        <input type="text" 
+                               id="room-name" 
+                               class="form-control" 
+                               placeholder="Es: Tombola di Natale">
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="fas fa-sign-in-alt"></i> Accedi / Crea Stanza
+                        </button>
+                        <a href="/" class="btn btn-outline">
+                            <i class="fas fa-home"></i> Torna alla Home
+                        </a>
+                    </div>
+                </form>
+
+                <div class="login-footer">
+                    <div class="info-box">
+                        <i class="fas fa-info-circle"></i>
+                        <div>
+                            <strong>Come funziona:</strong>
+                            <ol>
+                                <li>Inserisci codice admin ottenuto dal Super Admin</li>
+                                <li>Scegli un codice stanza univoco (es: FAMIGLIA2024)</li>
+                                <li>Condividi il codice stanza con i giocatori</li>
+                                <li>Gestisci la partita dal pannello admin</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Schermata Dashboard Admin -->
+    <div id="admin-dashboard-screen" class="screen">
+        <!-- Header -->
+        <header class="admin-header">
+            <div class="container">
+                <div class="admin-header-content">
+                    <div class="admin-brand">
+                        <div class="admin-avatar">
+                            <i class="fas fa-crown"></i>
+                        </div>
+                        <div class="admin-info">
+                            <h1>Dashboard Admin</h1>
+                            <div class="admin-details">
+                                <span class="room-badge">
+                                    <i class="fas fa-door-open"></i>
+                                    <span id="current-room-name">Caricamento...</span>
+                                    (<span id="current-room-code">---</span>)
+                                </span>
+                                <span class="admin-code-badge">
+                                    <i class="fas fa-key"></i> Admin: <span id="current-admin-code">---</span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="admin-controls-top">
+                        <button class="btn btn-sm btn-outline" id="btn-copy-link">
+                            <i class="fas fa-link"></i> Copia Link Stanza
+                        </button>
+                        <button class="btn btn-sm btn-warning" id="btn-refresh">
+                            <i class="fas fa-sync-alt"></i> Aggiorna
+                        </button>
+                        <button class="btn btn-sm btn-danger" id="btn-admin-logout">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Contenuto Principale -->
+        <main class="admin-main">
+            <div class="container">
+                <div class="admin-grid">
+                    <!-- Sidebar Sinistra - Controlli -->
+                    <div class="admin-sidebar">
+                        <!-- Controlli Gioco -->
+                        <div class="sidebar-card">
+                            <div class="card-header">
+                                <h3><i class="fas fa-gamepad"></i> Controlli Partita</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="control-buttons-grid">
+                                    <button class="btn btn-success btn-lg" id="btn-start-game">
+                                        <i class="fas fa-play"></i> Inizia Partita
+                                    </button>
+                                    <button class="btn btn-danger btn-lg" id="btn-stop-game">
+                                        <i class="fas fa-stop"></i> Ferma Partita
+                                    </button>
+                                    <button class="btn btn-primary btn-lg" id="btn-extract-number">
+                                        <i class="fas fa-random"></i> Estrai Numero
+                                    </button>
+                                    <button class="btn btn-secondary btn-lg" id="btn-auto-extract">
+                                        <i class="fas fa-robot"></i> Auto Estrazione
+                                    </button>
+                                </div>
+
+                                <div class="control-settings">
+                                    <div class="form-group">
+                                        <label for="auto-extract-interval">
+                                            <i class="fas fa-clock"></i> Intervallo Auto (secondi)
+                                        </label>
+                                        <input type="number" 
+                                               id="auto-extract-interval" 
+                                               class="form-control" 
+                                               value="6" 
+                                               min="1" 
+                                               max="60">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Statistiche Veloci -->
+                        <div class="sidebar-card">
+                            <div class="card-header">
+                                <h3><i class="fas fa-chart-line"></i> Statistiche</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="stats-grid">
+                                    <div class="stat-item">
+                                        <div class="stat-icon">
+                                            <i class="fas fa-users"></i>
+                                        </div>
+                                        <div class="stat-info">
+                                            <div class="stat-value" id="stats-players">0</div>
+                                            <div class="stat-label">Giocatori</div>
+                                        </div>
+                                    </div>
+                                    <div class="stat-item">
+                                        <div class="stat-icon">
+                                            <i class="fas fa-hashtag"></i>
+                                        </div>
+                                        <div class="stat-info">
+                                            <div class="stat-value" id="stats-extracted">0</div>
+                                            <div class="stat-label">Estratti</div>
+                                        </div>
+                                    </div>
+                                    <div class="stat-item">
+                                        <div class="stat-icon">
+                                            <i class="fas fa-trophy"></i>
+                                        </div>
+                                        <div class="stat-info">
+                                            <div class="stat-value" id="stats-winners">0</div>
+                                            <div class="stat-label">Vincitori</div>
+                                        </div>
+                                    </div>
+                                    <div class="stat-item">
+                                        <div class="stat-icon">
+                                            <i class="fas fa-bolt"></i>
+                                        </div>
+                                        <div class="stat-info">
+                                            <div class="stat-value" id="stats-active">No</div>
+                                            <div class="stat-label">Partita Attiva</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Azioni Rapide -->
+                        <div class="sidebar-card">
+                            <div class="card-header">
+                                <h3><i class="fas fa-bolt"></i> Azioni Rapide</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="quick-actions">
+                                    <button class="btn btn-outline btn-sm" data-action="announce">
+                                        <i class="fas fa-bullhorn"></i> Annuncio
+                                    </button>
+                                    <button class="btn btn-outline btn-sm" data-action="kick-all">
+                                        <i class="fas fa-user-slash"></i> Espelli Tutti
+                                    </button>
+                                    <button class="btn btn-outline btn-sm" data-action="reset-numbers">
+                                        <i class="fas fa-undo"></i> Reset Numeri
+                                    </button>
+                                    <button class="btn btn-outline btn-sm" data-action="export-data">
+                                        <i class="fas fa-download"></i> Esporta Dati
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Contenuto Principale -->
+                    <div class="admin-content">
+                        <!-- Numeri Estratti -->
+                        <div class="content-card">
+                            <div class="card-header">
+                                <h3><i class="fas fa-list-ol"></i> Numeri Estratti</h3>
+                                <div class="card-actions">
+                                    <span class="badge bg-primary" id="extracted-total-badge">0/90</span>
+                                    <button class="btn btn-sm btn-outline" id="btn-clear-extracted">
+                                        <i class="fas fa-trash"></i> Pulisci
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="extracted-numbers-container" id="extracted-numbers-container">
+                                    <div class="empty-state">
+                                        <i class="fas fa-dice"></i>
+                                        <p>Nessun numero estratto ancora</p>
+                                        <small>Usa "Estrai Numero" per iniziare</small>
+                                    </div>
+                                </div>
+                                <div class="extracted-progress">
+                                    <div class="progress">
+                                        <div class="progress-bar" id="extracted-progress-bar" style="width: 0%"></div>
+                                    </div>
+                                    <small><span id="extracted-count">0</span> numeri estratti su 90</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Gestione Giocatori -->
+                        <div class="content-card">
+                            <div class="card-header">
+                                <h3><i class="fas fa-users-cog"></i> Gestione Giocatori</h3>
+                                <div class="card-actions">
+                                    <span class="badge bg-success" id="online-players-badge">0 online</span>
+                                    <button class="btn btn-sm btn-outline" id="btn-refresh-players">
+                                        <i class="fas fa-sync"></i> Aggiorna
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="players-search">
+                                    <input type="text" 
+                                           id="players-search" 
+                                           class="form-control" 
+                                           placeholder="Cerca giocatore...">
+                                </div>
+                                <div class="players-table-container">
+                                    <table class="players-table" id="players-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Nome</th>
+                                                <th>Stato</th>
+                                                <th>Punteggio</th>
+                                                <th>Cartella</th>
+                                                <th>Azioni</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="players-table-body">
+                                            <tr class="empty-row">
+                                                <td colspan="5">
+                                                    <div class="empty-state">
+                                                        <i class="fas fa-user-friends"></i>
+                                                        <p>Nessun giocatore nella stanza</p>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Chat Admin -->
+                        <div class="content-card">
+                            <div class="card-header">
+                                <h3><i class="fas fa-comments"></i> Chat Admin</h3>
+                                <div class="card-actions">
+                                    <span class="badge bg-info" id="chat-count">0 messaggi</span>
+                                    <button class="btn btn-sm btn-outline" id="btn-clear-chat">
+                                        <i class="fas fa-trash"></i> Pulisci
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="chat-container-admin">
+                                    <div class="chat-messages-admin" id="chat-messages-admin">
+                                        <div class="empty-state">
+                                            <i class="fas fa-comment"></i>
+                                            <p>Nessun messaggio nella chat</p>
+                                        </div>
+                                    </div>
+                                    <div class="chat-input-admin">
+                                        <div class="input-group">
+                                            <input type="text" 
+                                                   id="admin-chat-input" 
+                                                   class="form-control" 
+                                                   placeholder="Scrivi un messaggio per tutti...">
+                                            <button class="btn btn-primary" id="btn-send-admin-chat">
+                                                <i class="fas fa-paper-plane"></i>
+                                            </button>
+                                        </div>
+                                        <small class="form-text">
+                                            I tuoi messaggi appariranno come annunci admin
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sidebar Destra - Info e QR -->
+                    <div class="admin-sidebar-right">
+                        <!-- QR Code e Link -->
+                        <div class="sidebar-card">
+                            <div class="card-header">
+                                <h3><i class="fas fa-qrcode"></i> Invita Giocatori</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="qrcode-container">
+                                    <div id="qrcode"></div>
+                                </div>
+                                <div class="room-link-container">
+                                    <div class="input-group">
+                                        <input type="text" 
+                                               id="room-link" 
+                                               class="form-control" 
+                                               readonly>
+                                        <button class="btn btn-primary" id="btn-copy-room-link">
+                                            <i class="fas fa-copy"></i>
+                                        </button>
+                                    </div>
+                                    <small class="form-text">
+                                        Condividi questo link con i giocatori
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Impostazioni Stanza -->
+                        <div class="sidebar-card">
+                            <div class="card-header">
+                                <h3><i class="fas fa-cog"></i> Impostazioni</h3>
+                            </div>
+                            <div class="card-body">
+                                <form id="room-settings-form">
+                                    <div class="form-group">
+                                        <label for="setting-max-players">
+                                            <i class="fas fa-user-friends"></i> Max Giocatori
+                                        </label>
+                                        <input type="number" 
+                                               id="setting-max-players" 
+                                               class="form-control" 
+                                               value="50" 
+                                               min="1" 
+                                               max="200">
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="setting-game-mode">
+                                            <i class="fas fa-flag"></i> Modalità Gioco
+                                        </label>
+                                        <select id="setting-game-mode" class="form-control">
+                                            <option value="tombola">Tombola Completa</option>
+                                            <option value="ambo">Ambo</option>
+                                            <option value="terno">Terno</option>
+                                            <option value="quaterna">Quaterna</option>
+                                            <option value="cinquina">Cinquina</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="form-check">
+                                        <input type="checkbox" 
+                                               id="setting-allow-spectators" 
+                                               class="form-check-input">
+                                        <label class="form-check-label" for="setting-allow-spectators">
+                                            Permetti spettatori
+                                        </label>
+                                    </div>
+                                    
+                                    <div class="form-check">
+                                        <input type="checkbox" 
+                                               id="setting-enable-chat" 
+                                               class="form-check-input" 
+                                               checked>
+                                        <label class="form-check-label" for="setting-enable-chat">
+                                            Abilita chat
+                                        </label>
+                                    </div>
+                                    
+                                    <div class="form-check">
+                                        <input type="checkbox" 
+                                               id="setting-enable-sounds" 
+                                               class="form-check-input" 
+                                               checked>
+                                        <label class="form-check-label" for="setting-enable-sounds">
+                                            Suoni di gioco
+                                        </label>
+                                    </div>
+                                    
+                                    <button type="submit" class="btn btn-primary w-100 mt-3">
+                                        <i class="fas fa-save"></i> Salva Impostazioni
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="admin-footer">
+            <div class="container">
+                <div class="footer-content">
+                    <div class="footer-info">
+                        <span id="admin-connection-status">
+                            <i class="fas fa-wifi"></i> Connesso al server
+                        </span>
+                        <span class="text-muted">
+                            <i class="fas fa-clock"></i> 
+                            Ultimo aggiornamento: <span id="last-update">--:--:--</span>
+                        </span>
+                    </div>
+                    <div class="footer-version">
+                        Tombola Online v2.0 • Admin Dashboard
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Modals -->
+    <div class="modal" id="announce-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-bullhorn"></i> Invia Annuncio</h3>
+                <button class="btn-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="announce-message">Messaggio Annuncio</label>
+                    <textarea id="announce-message" 
+                              class="form-control" 
+                              rows="3"
+                              placeholder="Scrivi il tuo annuncio per tutti i giocatori..."
+                              maxlength="500"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="announce-type">Tipo Annuncio</label>
+                    <select id="announce-type" class="form-control">
+                        <option value="info">Informazione</option>
+                        <option value="warning">Avviso Importante</option>
+                        <option value="success">Annuncio Vincita</option>
+                        <option value="emergency">Emergenza</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-action="cancel">Annulla</button>
+                <button class="btn btn-primary" data-action="send">Invia Annuncio</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Player Details Modal -->
+    <div class="modal" id="player-details-modal">
+        <div class="modal-content modal-lg">
+            <div class="modal-header">
+                <h3><i class="fas fa-user"></i> Dettagli Giocatore</h3>
+                <button class="btn-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="player-details-content">
+                    <!-- Contenuto caricato dinamicamente -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notifiche -->
+    <div class="notification-container"></div>
+
+    <!-- Scripts -->
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="admin-panel.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+    <script>
+        // Gestione Login Admin
+        document.getElementById('admin-login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const adminCode = document.getElementById('admin-code').value.trim();
+            const roomCode = document.getElementById('room-code').value.trim().toUpperCase();
+            const roomName = document.getElementById('room-name').value.trim();
+            
+            if (!adminCode || !roomCode) {
+                alert('Inserisci codice admin e codice stanza');
+                return;
+            }
+            
+            // Salva dati in sessionStorage
+            sessionStorage.setItem('adminCode', adminCode);
+            sessionStorage.setItem('roomCode', roomCode);
+            if (roomName) {
+                sessionStorage.setItem('roomName', roomName);
+            }
+            
+            // Nascondi login, mostra dashboard
+            document.getElementById('admin-login-screen').classList.remove('active');
+            document.getElementById('admin-dashboard-screen').classList.add('active');
+            document.getElementById('admin-loading').classList.remove('active');
+            
+            // Inizializza admin panel
+            window.adminPanel = new AdminPanel();
+        });
+        
+        // Torna alla home se non c'è sessione
+        setTimeout(() => {
+            const hasSession = sessionStorage.getItem('adminCode') && 
+                              sessionStorage.getItem('roomCode');
+            
+            if (!hasSession && !document.getElementById('admin-dashboard-screen').classList.contains('active')) {
+                // Nessuna sessione, torna alla home dopo 5 secondi di inattività
+                setTimeout(() => {
+                    if (!document.getElementById('admin-dashboard-screen').classList.contains('active')) {
+                        window.location.href = '/';
+                    }
+                }, 5000);
+            }
+        }, 1000);
+    </script>
+</body>
+</html>

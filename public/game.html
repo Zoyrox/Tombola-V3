@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tombola Online - Giocatore</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+</head>
+<body>
+    <!-- Schermata Caricamento -->
+    <div id="loading-screen" class="screen active">
+        <div class="loading-container">
+            <div class="loading-spinner">
+                <div class="spinner"></div>
+                <h2>Caricamento Tombola...</h2>
+                <p>Preparando la tua esperienza di gioco</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Schermata Giocatore -->
+    <div id="player-screen" class="screen">
+        <!-- Header -->
+        <header class="player-header">
+            <div class="container">
+                <div class="player-header-content">
+                    <div class="player-info">
+                        <div class="player-avatar" id="player-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="player-details">
+                            <h2 id="player-name-display">Giocatore</h2>
+                            <div class="room-info">
+                                <span class="room-badge" id="room-code-display">
+                                    <i class="fas fa-door-open"></i> Stanza: <span id="room-code-value">---</span>
+                                </span>
+                                <span class="game-status-badge" id="game-status">
+                                    <i class="fas fa-clock"></i> In attesa
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="player-stats">
+                        <div class="stat-item">
+                            <i class="fas fa-users"></i>
+                            <span id="players-count">0</span> giocatori
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-hashtag"></i>
+                            <span id="extracted-count">0</span>/90 estratti
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-star"></i>
+                            <span id="player-score">0</span>/15 punti
+                        </div>
+                    </div>
+                    
+                    <div class="player-actions">
+                        <button class="btn btn-sm btn-outline" id="btn-toggle-sound">
+                            <i class="fas fa-volume-up"></i> Suoni
+                        </button>
+                        <button class="btn btn-sm btn-outline" id="btn-fullscreen">
+                            <i class="fas fa-expand"></i> Schermo intero
+                        </button>
+                        <button class="btn btn-sm btn-danger" id="btn-leave">
+                            <i class="fas fa-sign-out-alt"></i> Esci
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Contenuto Principale -->
+        <main class="player-main">
+            <div class="container">
+                <div class="player-grid">
+                    <!-- Cartella Tombola -->
+                    <div class="tombola-card">
+                        <div class="card-header">
+                            <div class="card-title">
+                                <i class="fas fa-table"></i> La tua Cartella
+                                <small class="text-muted" id="card-numbers-info">15 numeri</small>
+                            </div>
+                            <div class="card-actions">
+                                <button class="btn btn-sm btn-outline" id="btn-print-card">
+                                    <i class="fas fa-print"></i> Stampa
+                                </button>
+                                <button class="btn btn-sm btn-outline" id="btn-new-card">
+                                    <i class="fas fa-redo"></i> Nuova cartella
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="tombola-grid" id="tombola-board">
+                            <!-- Numeri 1-90 generati dinamicamente -->
+                        </div>
+                        
+                        <div class="card-footer">
+                            <div class="progress">
+                                <div class="progress-bar" id="player-progress" style="width: 0%"></div>
+                            </div>
+                            <small>Progresso: <span id="player-progress-text">0/15</span></small>
+                        </div>
+                    </div>
+
+                    <!-- Pannello Laterale -->
+                    <div class="player-sidebar">
+                        <!-- Numeri Estratti Recenti -->
+                        <div class="sidebar-card">
+                            <div class="card-header">
+                                <h3><i class="fas fa-history"></i> Numeri Estratti</h3>
+                                <span class="badge bg-primary" id="extracted-total">0</span>
+                            </div>
+                            <div class="extracted-numbers-mini" id="extracted-numbers-mini">
+                                <div class="empty-state">
+                                    <i class="fas fa-hourglass-start"></i>
+                                    <p>Nessun numero estratto ancora</p>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <button class="btn btn-sm btn-outline w-100" id="btn-view-all-numbers">
+                                    <i class="fas fa-list"></i> Vedi tutti i numeri
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Giocatori Online -->
+                        <div class="sidebar-card">
+                            <div class="card-header">
+                                <h3><i class="fas fa-users"></i> Giocatori</h3>
+                                <span class="badge bg-success" id="online-count">0</span>
+                            </div>
+                            <div class="players-list-mini" id="players-list-mini">
+                                <div class="empty-state">
+                                    <i class="fas fa-user-friends"></i>
+                                    <p>Nessun altro giocatore online</p>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <button class="btn btn-sm btn-outline w-100" id="btn-view-leaderboard">
+                                    <i class="fas fa-trophy"></i> Classifica
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Chat -->
+                        <div class="sidebar-card chat-container">
+                            <div class="card-header">
+                                <h3><i class="fas fa-comments"></i> Chat</h3>
+                                <span class="badge bg-info" id="unread-count">0</span>
+                            </div>
+                            <div class="chat-messages" id="chat-messages">
+                                <div class="empty-state">
+                                    <i class="fas fa-comment"></i>
+                                    <p>Inizia a chattare!</p>
+                                </div>
+                            </div>
+                            <div class="chat-input">
+                                <div class="input-group">
+                                    <input type="text" 
+                                           id="chat-input" 
+                                           class="form-control" 
+                                           placeholder="Scrivi un messaggio..."
+                                           maxlength="200">
+                                    <button class="btn btn-primary" id="btn-send-chat">
+                                        <i class="fas fa-paper-plane"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="player-footer">
+            <div class="container">
+                <div class="footer-content">
+                    <div class="footer-info">
+                        <span id="connection-status">
+                            <i class="fas fa-wifi"></i> Connesso
+                        </span>
+                        <span class="text-muted" id="last-number">
+                            Ultimo numero: <span id="last-number-value">--</span>
+                        </span>
+                    </div>
+                    <div class="footer-actions">
+                        <button class="btn btn-sm btn-outline" id="btn-help">
+                            <i class="fas fa-question-circle"></i> Aiuto
+                        </button>
+                        <button class="btn btn-sm btn-outline" id="btn-report">
+                            <i class="fas fa-flag"></i> Segnala
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Modal Numeri Estratti -->
+    <div class="modal" id="numbers-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Tutti i Numeri Estratti</h3>
+                <button class="btn-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="all-numbers-grid" id="all-numbers-grid"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Classifica -->
+    <div class="modal" id="leaderboard-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Classifica Giocatori</h3>
+                <button class="btn-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <table class="leaderboard-table" id="leaderboard-table">
+                    <thead>
+                        <tr>
+                            <th>Pos.</th>
+                            <th>Giocatore</th>
+                            <th>Punti</th>
+                            <th>Numeri Trovati</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Popup Numero Estratto -->
+    <div class="number-popup-container">
+        <!-- Popup appare qui dinamicamente -->
+    </div>
+
+    <!-- Notifiche -->
+    <div class="notification-container"></div>
+
+    <!-- Scripts -->
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="game.js"></script>
+    <script>
+        // Parametri URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const roomCode = urlParams.get('room') || '';
+        const playerName = decodeURIComponent(urlParams.get('name') || '');
+        
+        // Inizializza gioco
+        document.addEventListener('DOMContentLoaded', () => {
+            // Imposta nome se presente in URL
+            if (playerName) {
+                document.getElementById('player-name-display').textContent = playerName;
+                document.getElementById('player-avatar').textContent = playerName.charAt(0).toUpperCase();
+            }
+            
+            if (roomCode) {
+                document.getElementById('room-code-value').textContent = roomCode;
+            }
+            
+            // Gestione eventi UI
+            document.getElementById('btn-leave').addEventListener('click', () => {
+                if (confirm('Sei sicuro di voler lasciare la partita?')) {
+                    window.location.href = '/';
+                }
+            });
+            
+            document.getElementById('btn-help').addEventListener('click', () => {
+                alert(`COME GIOCARE:
+                
+1. Aspetta che l'admin inizi la partita
+2. I numeri estratti appariranno come popup
+3. Controlla se hai i numeri sulla tua cartella
+4. I numeri che hai saranno evidenziati in verde
+5. Quando trovi tutti i 15 numeri, fai TOMBOLA!
+
+CONTROLLI:
+• Click su un numero per segnarlo manualmente
+• Usa la chat per comunicare con altri giocatori
+• Guarda la classifica per vedere chi sta vincendo
+
+Buona fortuna! 🍀`);
+            });
+            
+            document.getElementById('btn-fullscreen').addEventListener('click', () => {
+                if (!document.fullscreenElement) {
+                    document.documentElement.requestFullscreen().catch(err => {
+                        console.log(`Errore fullscreen: ${err.message}`);
+                    });
+                } else {
+                    if (document.exitFullscreen) {
+                        document.exitFullscreen();
+                    }
+                }
+            });
+            
+            // Toggle sound
+            let soundEnabled = true;
+            document.getElementById('btn-toggle-sound').addEventListener('click', function() {
+                soundEnabled = !soundEnabled;
+                this.innerHTML = soundEnabled ? 
+                    '<i class="fas fa-volume-up"></i> Suoni ON' : 
+                    '<i class="fas fa-volume-mute"></i> Suoni OFF';
+                
+                localStorage.setItem('tombola_sound', soundEnabled);
+            });
+            
+            // Carica preferenze
+            const savedSound = localStorage.getItem('tombola_sound');
+            if (savedSound !== null) {
+                soundEnabled = savedSound === 'true';
+                document.getElementById('btn-toggle-sound').innerHTML = soundEnabled ? 
+                    '<i class="fas fa-volume-up"></i> Suoni ON' : 
+                    '<i class="fas fa-volume-mute"></i> Suoni OFF';
+            }
+        });
+    </script>
+</body>
+</html>
