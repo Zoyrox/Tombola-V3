@@ -1,0 +1,462 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    color: #333;
+    line-height: 1.6;
+}
+
+.screen {
+    display: none;
+    padding: 2rem;
+    min-height: 100vh;
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+#login-screen {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    max-width: 500px;
+    margin: 2rem auto;
+    padding: 3rem;
+}
+
+.login-form {
+    width: 100%;
+}
+
+.login-form h1 {
+    text-align: center;
+    color: #764ba2;
+    margin-bottom: 2rem;
+    font-weight: 700;
+    font-size: 2.5rem;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.login-form input {
+    width: 100%;
+    padding: 15px;
+    margin: 10px 0;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background: #f8f9fa;
+}
+
+.login-form input:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    transform: translateY(-2px);
+}
+
+.login-form button {
+    width: 100%;
+    padding: 15px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin: 15px 0;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+.login-form button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+}
+
+.admin-login {
+    margin-top: 1rem;
+    text-align: center;
+}
+
+#admin-login-btn {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    box-shadow: 0 4px 15px rgba(245, 87, 108, 0.4);
+}
+
+#admin-login-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(245, 87, 108, 0.5);
+}
+
+#admin-screen, #player-screen {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 2rem;
+}
+
+#admin-screen h2, #player-screen h2 {
+    color: #764ba2;
+    margin-bottom: 1.5rem;
+    font-weight: 700;
+    font-size: 2rem;
+    text-align: center;
+}
+
+.admin-controls {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin: 2rem 0;
+}
+
+.admin-controls button {
+    padding: 12px 24px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+.admin-controls button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+}
+
+#auto-extract-btn {
+    background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+}
+
+#stop-auto-btn {
+    background: linear-gradient(135deg, #30cfd0 0%, #330867 100%);
+}
+
+#remove-player-btn {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    margin-top: 1rem;
+}
+
+.players-list {
+    margin: 2rem 0;
+    text-align: left;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.players-list h3 {
+    color: #764ba2;
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+}
+
+.players-list ul {
+    list-style: none;
+    padding: 0;
+}
+
+.players-list li {
+    padding: 12px 15px;
+    background: #f8f9fa;
+    margin: 8px 0;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.players-list li:hover {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    transform: translateX(5px);
+}
+
+.players-list li.selected {
+    background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+    color: white;
+}
+
+#player-name {
+    text-align: center;
+    color: #764ba2;
+    font-size: 1.2rem;
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+}
+
+.bingo-card {
+    display: inline-block;
+    background: white;
+    border: 3px solid #764ba2;
+    padding: 20px;
+    margin: 20px auto;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.bingo-row {
+    display: flex;
+    justify-content: space-around;
+    margin: 10px 0;
+}
+
+.bingo-cell {
+    width: 50px;
+    height: 50px;
+    border: 2px solid #e0e0e0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 1.1rem;
+    background: #f8f9fa;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.bingo-cell:hover {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    transform: scale(1.1);
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+}
+
+.bingo-cell.extracted {
+    background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+    color: white;
+    border-color: #fa709a;
+    animation: pulse 0.5s ease;
+}
+
+#extracted-numbers {
+    margin: 2rem 0;
+    text-align: center;
+}
+
+#extracted-numbers span {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+    color: white;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 40px;
+    margin: 5px;
+    font-weight: bold;
+    box-shadow: 0 4px 10px rgba(250, 112, 154, 0.4);
+    animation: popIn 0.3s ease;
+}
+
+#number-popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+    z-index: 1000;
+    transition: all 0.3s ease;
+}
+
+#number-popup.show {
+    transform: translate(-50%, -50%) scale(1);
+}
+
+.popup-content {
+    text-align: center;
+}
+
+.popup-content h2 {
+    color: white;
+    margin: 0 0 20px 0;
+    font-size: 2rem;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.popup-content span {
+    display: inline-block;
+    width: 50px;
+    height: 50px;
+    background: white;
+    color: #764ba2;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 50px;
+    margin: 8px;
+    font-weight: bold;
+    font-size: 1.2rem;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    animation: bounce 0.5s ease;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* Animazioni */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+@keyframes popIn {
+    0% { transform: scale(0); opacity: 0; }
+    50% { transform: scale(1.1); opacity: 1; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .login-form {
+        padding: 2rem;
+    }
+    
+    .login-form h1 {
+        font-size: 2rem;
+    }
+    
+    .bingo-card {
+        padding: 10px;
+    }
+    
+    .bingo-cell {
+        width: 40px;
+        height: 40px;
+        font-size: 1rem;
+    }
+    
+    .admin-controls {
+        flex-direction: column;
+    }
+    
+    .admin-controls button {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .screen {
+        padding: 1rem;
+    }
+    
+    #login-screen, #admin-screen, #player-screen {
+        margin: 1rem;
+        padding: 1.5rem;
+    }
+    
+    .login-form h1 {
+        font-size: 1.8rem;
+    }
+    
+    .bingo-cell {
+        width: 35px;
+        height: 35px;
+        font-size: 0.9rem;
+    }
+    
+    #number-popup {
+        padding: 20px;
+        width: 90%;
+    }
+    
+    .popup-content h2 {
+        font-size: 1.5rem;
+    }
+    
+    .popup-content span {
+        width: 40px;
+        height: 40px;
+        font-size: 1rem;
+    }
+}
+
+/* Stile per i messaggi di notifica */
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 15px 25px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    z-index: 2000;
+    transform: translateX(400px);
+    transition: transform 0.3s ease;
+}
+
+.notification.show {
+    transform: translateX(0);
+}
+
+/* Stile per i messaggi di errore */
+.error {
+    background: linear-gradient(135deg, #f5576c 0%, #f093fb 100%);
+}
+
+/* Stile per i messaggi di successo */
+.success {
+    background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+}
+
+/* Effetti hover per i bottoni */
+.button-hover {
+    position: relative;
+    overflow: hidden;
+}
+
+.button-hover::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.2);
+    transition: left 0.3s ease;
+}
+
+.button-hover:hover::before {
+    left: 100%;
+}
